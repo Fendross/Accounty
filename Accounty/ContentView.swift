@@ -1,10 +1,3 @@
-//
-//  ContentView.swift
-//  Accounty
-//
-//  Created by Fendross on 21/12/25.
-//
-
 import SwiftUI
 import SwiftData
 
