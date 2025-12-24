@@ -20,4 +20,8 @@ final class Entry {
         self.currency = "EUR"
         self.amount = amount
     }
+    
+    private func toString() -> String {
+        return "\(timestamp) - \(type): \(category) - \(desc) - \(currency): \(amount)"
+    }
 }

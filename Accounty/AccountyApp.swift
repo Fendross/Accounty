@@ -5,7 +5,7 @@ import SwiftData
 struct AccountyApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Item.self
+            Entry.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 
@@ -18,7 +18,7 @@ struct AccountyApp: App {
 
     var body: some Scene {
         WindowGroup {
-            EntryView()
+            LoginView()
         }
         .modelContainer(sharedModelContainer)
     }
