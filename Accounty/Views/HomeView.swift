@@ -6,85 +6,68 @@ struct HomeView: View {
     @Query private var entries: [Entry]
     
     @Binding var username: String
+    @State private var selectedEntry: Entry?
 
     var body: some View {
-        HStack {
-            NavigationSplitView {
-                List {
-                    Text("Welcome \(username)")
-                }
-                .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-                .toolbar {
-                    ToolbarItem {
-                        Button(action: helloWorlde) {
-                            Label("Print Hello Worlde", systemImage: "checkmark.message")
-                        }
+        NavigationSplitView {
+            List(selection: $selectedEntry) {
+                Text("_Hello_, **\(username)**")
+                
+                Divider()
+                
+                ForEach(entries) { entry in
+                    NavigationLink(value: entry) {
+                        Text(entry.toStringLabel())
                     }
                 }
-            } detail: {
+            }
+            .navigationSplitViewColumnWidth(min: 200, ideal: 300)
+            .toolbar {
+                ToolbarItem {
+                    Button(action: addEntry) {
+                        Label("Add Entry", systemImage: "plus")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: deleteAllEntries) {
+                        Label("Delete All Entries", systemImage: "minus")
+                    }
+                }
+            }
+        } detail: {
+            if let selectedEntry {
+                VStack {
+                    Text(selectedEntry.toStringFull())
+                    Spacer()
+                }
+                .padding()
+            } else {
                 Text("Select an item from the sidebar")
+                    .foregroundStyle(.secondary)
             }
         }
-        .buttonStyle(.bordered)
+        .navigationTitle("Accounty - Your Personal NAV Analyzer")
+        .navigationSubtitle("Last updated just now")
     }
     
-    private func helloWorlde() {
-        print("Hello World!")
+    private func addEntry() {
+        withAnimation {
+            let newEntry = Entry(
+                timestamp: Date(),
+                type: "EXPENSE",
+                category: "Travel",
+                desc: "Flight - CRL",
+                amount: 100.99
+            )
+            modelContext.insert(newEntry)
+        }
+    }
+    
+    private func deleteAllEntries() {
+        do {
+            try modelContext.delete(model: Entry.self)
+        } catch {
+            print("Failed to delete students.")
+        }
     }
 }
-
-/*
- import SwiftUI
- import SwiftData
-
- struct ContentView: View {
-     @Environment(\.modelContext) private var modelContext
-     @Query private var items: [Item]
-
-     var body: some View {
-         NavigationSplitView {
-             List {
-                 ForEach(items) { item in
-                     NavigationLink {
-                         Text("Item at \(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))")
-                     } label: {
-                         Text(item.timestamp, format: Date.FormatStyle(date: .numeric, time: .standard))
-                     }
-                 }
-                 .onDelete(perform: deleteItems)
-             }
-             .navigationSplitViewColumnWidth(min: 180, ideal: 200)
-             .toolbar {
-                 ToolbarItem {
-                     Button(action: addItem) {
-                         Label("Add Item", systemImage: "plus")
-                     }
-                 }
-             }
-         } detail: {
-             Text("Select an item")
-         }
-     }
-
-     private func addItem() {
-         withAnimation {
-             let newItem = Item(timestamp: Date())
-             modelContext.insert(newItem)
-         }
-     }
-
-     private func deleteItems(offsets: IndexSet) {
-         withAnimation {
-             for index in offsets {
-                 modelContext.delete(items[index])
-             }
-         }
-     }
- }
-
- #Preview {
-     ContentView()
-         .modelContainer(for: Item.self, inMemory: true)
- }
-
- */

@@ -21,7 +21,11 @@ final class Entry {
         self.amount = amount
     }
     
-    private func toString() -> String {
-        return "\(timestamp) - \(type): \(category) - \(desc) - \(currency): \(amount)"
+    func toStringFull() -> String {
+        return "\(timestamp.ISO8601Format()) - \(type) - \(category) - \(desc) - \(currency) \(amount)"
+    }
+    
+    func toStringLabel() -> String {
+        return "\(timestamp.ISO8601Format()) - \(type) - \(category)"
     }
 }
