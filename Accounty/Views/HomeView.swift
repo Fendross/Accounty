@@ -3,7 +3,7 @@ import SwiftData
 
 struct HomeView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query private var entries: [Entry]
+    @Query(sort: \Entry.timestamp, order: .reverse) private var entries: [Entry]
     
     @Binding var username: String
     @State private var selectedEntry: Entry?
