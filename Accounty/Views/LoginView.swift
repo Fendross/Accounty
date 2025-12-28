@@ -7,6 +7,17 @@ struct LoginView: View {
 
     var body: some View {
         NavigationStack {
+            Label {}
+            icon: {
+                Ellipse()
+                    .fill(Color.green)
+                    .frame(width: 70, height: 60, alignment: .center)
+                    .overlay(Text("Accounty"))
+            }
+            Image("AccountyIcon")
+            
+            Divider()
+            
             Form {
                 TextField(text: $username, prompt: Text("Enter username...")) {
                     Text("Username")
