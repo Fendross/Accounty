@@ -10,7 +10,7 @@ struct LoginView: View {
             Label {}
             icon: {
                 Ellipse()
-                    .fill(Color.green)
+                    .fill(Color(red: 0.5568, green: 0.5137, blue: 0.3451, opacity: 0.5))
                     .frame(width: 70, height: 60, alignment: .center)
                     .overlay(Text("Accounty"))
             }
