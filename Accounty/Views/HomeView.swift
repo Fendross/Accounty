@@ -12,6 +12,9 @@ struct HomeView: View {
     @State var category: String
     @State var desc: String
     @State var amount: String
+    
+    var types: [String] = ["Income", "Expense"]
+    @State var selectedType: String = "Income"
 
     var body: some View {
         NavigationSplitView {
@@ -52,6 +55,11 @@ struct HomeView: View {
                     
                     Divider()
                     
+                    Picker("Type", selection: $selectedType) {
+                        ForEach(types, id: \.self) { type in
+                            Text(type)
+                        }
+                    }
                     TextField(text: $type, prompt: Text("Enter typology...")) {
                         Text("Type")
                     }
@@ -78,8 +86,8 @@ struct HomeView: View {
                 }
             }
         }
-        .navigationTitle("Accounty - Your Personal NAV Analyzer")
-        .navigationSubtitle("Last updated just now")
+        .navigationTitle("Accounty")
+        .navigationSubtitle("Manage your finances")
     }
     
     private func addEntry() {
