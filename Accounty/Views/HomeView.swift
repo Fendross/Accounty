@@ -18,6 +18,7 @@ struct HomeView: View {
                                 
     @State var desc: String
     @State var amount: String
+    @State var notes: String
 
     // Main View.
     var body: some View {
@@ -99,6 +100,12 @@ struct HomeView: View {
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
                     
+                    TextField(text: $notes, prompt: Text("Enter notes on this entry...")) {
+                        Text("Notes")
+                    }
+                    .frame(width: 200, height: 50)
+                    .textFieldStyle(.roundedBorder)
+                    
                     Button(action: addEntry) {
                         Label("Insert Entry", systemImage: "character.book.closed")
                     }
@@ -119,7 +126,8 @@ struct HomeView: View {
                 type: type,
                 category: category,
                 desc: desc,
-                amount: convertedAmount
+                amount: convertedAmount,
+                notes: notes
             )
             modelContext.insert(newEntry)
         }

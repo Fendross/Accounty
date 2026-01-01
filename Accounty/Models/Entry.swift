@@ -10,8 +10,9 @@ final class Entry {
     var desc: String
     var currency: String
     var amount: Double
+    var notes: String
     
-    init(timestamp: Date, type: String, category: String, desc: String, amount: Double) {
+    init(timestamp: Date, type: String, category: String, desc: String, amount: Double, notes: String) {
         self.uuid = UUID()
         self.timestamp = timestamp
         self.type = type
@@ -19,10 +20,11 @@ final class Entry {
         self.desc = desc
         self.currency = "EUR"
         self.amount = amount
+        self.notes = notes
     }
     
     func toStringFull() -> String {
-        return "\(timestamp.ISO8601Format()) - \(type) - \(category) - \(desc) - \(currency) \(amount)"
+        return "\(timestamp.ISO8601Format()) - \(type) - \(category) - \(desc) - \(currency) \(amount) - \(notes)"
     }
     
     func toStringLabel() -> String {

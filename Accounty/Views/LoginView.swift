@@ -31,7 +31,8 @@ struct LoginView: View {
                     type: "",
                     category: "",
                     desc: "",
-                    amount: ""
+                    amount: "",
+                    notes: ""
                 )
             }
         }
