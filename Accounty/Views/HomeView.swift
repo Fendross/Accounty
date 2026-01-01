@@ -8,13 +8,14 @@ struct HomeView: View {
     @Binding var username: String
     @State private var selectedEntry: Entry?
     
-    @State var type: String
-    @State var category: String
+    var types: [String] = ["Income", "Expense"]
+    @State var type: String = "Income"
+    
+    var categories: [String] = ["Placeholder", "Salary", "Taxes", "Entertainment", "Utilities", "Social Life"]
+    @State var category: String = "Placeholder"
+                                
     @State var desc: String
     @State var amount: String
-    
-    var types: [String] = ["Income", "Expense"]
-    @State var selectedType: String = "Income"
 
     var body: some View {
         NavigationSplitView {
@@ -29,7 +30,7 @@ struct HomeView: View {
                     }
                 }
             }
-            .navigationSplitViewColumnWidth(min: 200, ideal: 300)
+            .navigationSplitViewColumnWidth(min: 400, ideal: 500)
             .toolbar {
                 ToolbarItem {
                     Button(action: addEntry) {
@@ -38,7 +39,17 @@ struct HomeView: View {
                 }
                 ToolbarItem {
                     Button(action: deleteAllEntries) {
-                        Label("Delete All Entries", systemImage: "minus")
+                        Label("Delete Entries", systemImage: "minus")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: deleteSelectedEntry) {
+                        Label("Delete Entry", systemImage: "minus.magnifyingglass")
+                    }
+                }
+                ToolbarItem {
+                    Button(action: resetSelectedEntry) {
+                        Label("Unselect Entry", systemImage: "delete.left")
                     }
                 }
             }
@@ -52,21 +63,22 @@ struct HomeView: View {
             } else {
                 VStack {
                     Text("New entry creation")
+                        .frame(width: 200, height: 50)
+                        .textFieldStyle(.roundedBorder)
                     
                     Divider()
                     
-                    Picker("Type", selection: $selectedType) {
+                    Picker("Type", selection: $type) {
                         ForEach(types, id: \.self) { type in
                             Text(type)
                         }
                     }
-                    TextField(text: $type, prompt: Text("Enter typology...")) {
-                        Text("Type")
-                    }
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
-                    TextField(text: $category, prompt: Text("Enter category...")) {
-                        Text("Category")
+                    Picker("Category", selection: $category) {
+                        ForEach(categories, id: \.self) { category in
+                            Text(category)
+                        }
                     }
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
@@ -91,13 +103,15 @@ struct HomeView: View {
     }
     
     private func addEntry() {
+        let convertedAmount: Double = Double(amount) ?? 0.0
+        
         withAnimation {
             let newEntry = Entry(
                 timestamp: Date(),
-                type: "EXPENSE",
-                category: "Travel",
-                desc: "Flight - CRL",
-                amount: 100.99
+                type: type,
+                category: category,
+                desc: desc,
+                amount: convertedAmount
             )
             modelContext.insert(newEntry)
         }
@@ -106,8 +120,22 @@ struct HomeView: View {
     private func deleteAllEntries() {
         do {
             try modelContext.delete(model: Entry.self)
+            resetSelectedEntry()
         } catch {
-            print("Failed to delete students.")
+            print("Failed to delete entries.")
         }
+    }
+    
+    private func deleteSelectedEntry() {
+        if let unwrappedEntry = selectedEntry {
+            modelContext.delete(unwrappedEntry)
+            resetSelectedEntry()
+        } else {
+            return
+        }
+    }
+    
+    private func resetSelectedEntry() {
+        selectedEntry = nil
     }
 }
