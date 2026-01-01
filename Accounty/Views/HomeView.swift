@@ -2,9 +2,11 @@ import SwiftUI
 import SwiftData
 
 struct HomeView: View {
+    // Environment initialization.
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Entry.timestamp, order: .reverse) private var entries: [Entry]
     
+    // Variables.
     @Binding var username: String
     @State private var selectedEntry: Entry?
     
@@ -17,6 +19,7 @@ struct HomeView: View {
     @State var desc: String
     @State var amount: String
 
+    // Main View.
     var body: some View {
         NavigationSplitView {
             List(selection: $selectedEntry) {
@@ -62,7 +65,7 @@ struct HomeView: View {
                 .padding()
             } else {
                 VStack {
-                    Text("New entry creation")
+                    Text("New entry creation form")
                         .frame(width: 200, height: 50)
                         .textFieldStyle(.roundedBorder)
                     
@@ -75,6 +78,7 @@ struct HomeView: View {
                     }
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
+                    
                     Picker("Category", selection: $category) {
                         ForEach(categories, id: \.self) { category in
                             Text(category)
@@ -82,18 +86,21 @@ struct HomeView: View {
                     }
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
+                    
                     TextField(text: $desc, prompt: Text("Enter description...")) {
                         Text("Description")
                     }
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
+                    
                     TextField(text: $amount, prompt: Text("Enter amount...")) {
                         Text("Amount")
                     }
                     .frame(width: 200, height: 50)
                     .textFieldStyle(.roundedBorder)
+                    
                     Button(action: addEntry) {
-                        Label("Insert", systemImage: "character.book.closed")
+                        Label("Insert Entry", systemImage: "character.book.closed")
                     }
                 }
             }
@@ -102,6 +109,7 @@ struct HomeView: View {
         .navigationSubtitle("Manage your finances")
     }
     
+    // Methods.
     private func addEntry() {
         let convertedAmount: Double = Double(amount) ?? 0.0
         

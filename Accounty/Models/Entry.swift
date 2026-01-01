@@ -26,6 +26,6 @@ final class Entry {
     }
     
     func toStringLabel() -> String {
-        return "\(timestamp.ISO8601Format()) - \(type) - \(category)"
+        return "\(timestamp.ISO8601Format()) - \(type) - \(category) - \(amount)"
     }
 }
