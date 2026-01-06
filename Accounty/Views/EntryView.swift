@@ -1,7 +1,7 @@
 import SwiftUI
 import SwiftData
 
-struct HomeView: View {
+struct EntryView: View {
     // Environment initialization.
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Entry.timestamp, order: .reverse) private var entries: [Entry]
@@ -35,8 +35,6 @@ struct HomeView: View {
                 }
                 
                 Divider()
-                
-                Text("**Menu**")
                 
                 NavigationLink(value: "New Entry") {
                     Text("Selected the Entry Insert Menu item")

@@ -26,7 +26,7 @@ struct LoginView: View {
                 .textFieldStyle(.roundedBorder)
             }
             NavigationLink("Login") {
-                HomeView(
+                MainMenuView(
                     username: $username,
                     type: "",
                     category: "",
