@@ -33,6 +33,17 @@ struct HomeView: View {
                         Text(entry.toStringLabel())
                     }
                 }
+                
+                Divider()
+                
+                Text("**Menu**")
+                
+                NavigationLink(value: "New Entry") {
+                    Text("Selected the Entry Insert Menu item")
+                }
+                NavigationLink(value: "NAV View") {
+                    Text("Selected the NAV View Menu item")
+                }
             }
             .navigationSplitViewColumnWidth(min: 400, ideal: 500)
             .toolbar {
