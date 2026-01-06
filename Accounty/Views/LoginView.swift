@@ -27,12 +27,7 @@ struct LoginView: View {
             }
             NavigationLink("Login") {
                 MainMenuView(
-                    username: $username,
-                    type: "",
-                    category: "",
-                    desc: "",
-                    amount: "",
-                    notes: ""
+                    username: $username
                 )
             }
         }
