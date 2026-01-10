@@ -2,7 +2,6 @@ import SwiftUI
 import SwiftData
 
 struct LoginView: View {
-    @Environment(\.modelContext) private var modelContext
     @State private var username: String = ""
 
     var body: some View {
