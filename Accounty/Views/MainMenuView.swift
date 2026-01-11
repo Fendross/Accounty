@@ -57,7 +57,7 @@ struct MainMenuView: View {
                 case "reports":
                     Text("Automatic Reports View")
                 case "history":
-                    Text("Transaction History")
+                    HistoryView()
                 case "settings":
                     Text("Settings View")
                 default:
