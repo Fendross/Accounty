@@ -48,11 +48,6 @@ struct MainMenuView: View {
                 case "new_entry":
                     EntryView(
                         username: $username,
-                        type: "",
-                        category: "",
-                        desc: "",
-                        amount: "",
-                        notes: ""
                     )
                 case "reports":
                     Text("Automatic Reports View")

@@ -2,165 +2,188 @@ import SwiftUI
 import SwiftData
 
 struct EntryView: View {
-    // Environment initialization.
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Entry.timestamp, order: .reverse) private var entries: [Entry]
     
-    // Variables.
     @Binding var username: String
     @State private var selectedEntry: Entry?
     
-    var types: [String] = ["Income", "Expense"]
-    @State var type: String = "Income"
+    let types = ["Income", "Expense"]
+    let categories = ["Salary", "Taxes", "Entertainment", "Utilities", "Social Life", "Food", "Travel"]
     
-    var categories: [String] = ["Placeholder", "Salary", "Taxes", "Entertainment", "Utilities", "Social Life"]
-    @State var category: String = "Placeholder"
-                                
-    @State var desc: String
-    @State var amount: String
-    @State var notes: String
+    // Form States
+    @State private var type: String = "Expense"
+    @State private var category: String = "Entertainment"
+    @State private var desc: String = ""
+    @State private var amount: Double = 0.0
+    @State private var notes: String = ""
 
-    // Main View.
     var body: some View {
         NavigationSplitView {
             List(selection: $selectedEntry) {
-                Text("_Hello_, **\(username)**")
-                
-                Divider()
-                
-                ForEach(entries) { entry in
-                    NavigationLink(value: entry) {
-                        Text(entry.toStringLabel())
+                Section("Recent History") {
+                    ForEach(entries) { entry in
+                        NavigationLink(value: entry) {
+                            VStack(alignment: .leading) {
+                                Text(entry.desc.isEmpty ? "No Description" : entry.desc)
+                                    .font(.headline)
+                                Text(entry.toStringLabel())
+                                    .font(.caption)
+                                    .foregroundStyle(.secondary)
+                            }
+                        }
                     }
-                }
-                
-                Divider()
-                
-                NavigationLink(value: "New Entry") {
-                    Text("Selected the Entry Insert Menu item")
-                }
-                NavigationLink(value: "NAV View") {
-                    Text("Selected the NAV View Menu item")
                 }
             }
-            .navigationSplitViewColumnWidth(min: 400, ideal: 500)
+            .navigationSplitViewColumnWidth(min: 250, ideal: 300)
             .toolbar {
-                ToolbarItem {
-                    Button(action: addEntry) {
-                        Label("Add Entry", systemImage: "plus")
-                    }
-                }
-                ToolbarItem {
-                    Button(action: deleteAllEntries) {
-                        Label("Delete Entries", systemImage: "minus")
-                    }
-                }
-                ToolbarItem {
-                    Button(action: deleteSelectedEntry) {
-                        Label("Delete Entry", systemImage: "minus.magnifyingglass")
-                    }
-                }
-                ToolbarItem {
+                ToolbarItemGroup {
                     Button(action: resetSelectedEntry) {
-                        Label("Unselect Entry", systemImage: "delete.left")
+                        Label("New Entry", systemImage: "plus.square")
                     }
+                    Button(role: .destructive, action: deleteSelectedEntry) {
+                        Label("Delete", systemImage: "trash")
+                    }
+                    .disabled(selectedEntry == nil)
                 }
             }
         } detail: {
             if let selectedEntry {
-                VStack {
-                    Text(selectedEntry.toStringFull())
+                EntryDetailDisplay(entry: selectedEntry)
+            } else {
+                HStack {
+                    Spacer()
+                    
+                    VStack {
+                        Spacer()
+                        
+                        VStack(spacing: 20) {
+                            Text("New Entry")
+                                .font(.largeTitle)
+                                .bold()
+                            
+                            Form {
+                                Section {
+                                    Picker("Type", selection: $type) {
+                                        ForEach(types, id: \.self) { Text($0) }
+                                    }
+                                    .pickerStyle(.segmented)
+                                    
+                                    Picker("Category", selection: $category) {
+                                        ForEach(categories, id: \.self) { Text($0) }
+                                    }
+                                    
+                                    TextField("Description", text: $desc)
+                                    
+                                    
+                                    TextField("Amount", value: $amount, format: .currency(code: "EUR"))
+                                }
+                                
+                                Section("Notes") {
+                                    TextEditor(text: $notes)
+                                        .frame(height: 80)
+                                        .cornerRadius(5)
+                                }
+                            }
+                            .formStyle(.grouped)
+                            .frame(width: 400)
+                            
+                            Button(action: addEntry) {
+                                Text("Insert Entry")
+                                    .frame(maxWidth: .infinity)
+                            }
+                            .buttonStyle(.borderedProminent)
+                            .controlSize(.large)
+                            .frame(width: 400)
+                        }
+                        .padding(30)
+                        .background(Color(NSColor.windowBackgroundColor))
+                        .cornerRadius(20)
+                        .shadow(radius: 10)
+                        
+                        Spacer()
+                    }
+                    
                     Spacer()
                 }
-                .padding()
-            } else {
-                VStack {
-                    Text("New entry creation form")
-                        .frame(width: 200, height: 50)
-                        .textFieldStyle(.roundedBorder)
-                    
-                    Divider()
-                    
-                    Picker("Type", selection: $type) {
-                        ForEach(types, id: \.self) { type in
-                            Text(type)
-                        }
-                    }
-                    .frame(width: 200, height: 50)
-                    .textFieldStyle(.roundedBorder)
-                    
-                    Picker("Category", selection: $category) {
-                        ForEach(categories, id: \.self) { category in
-                            Text(category)
-                        }
-                    }
-                    .frame(width: 200, height: 50)
-                    .textFieldStyle(.roundedBorder)
-                    
-                    TextField(text: $desc, prompt: Text("Enter description...")) {
-                        Text("Description")
-                    }
-                    .frame(width: 200, height: 50)
-                    .textFieldStyle(.roundedBorder)
-                    
-                    TextField(text: $amount, prompt: Text("Enter amount...")) {
-                        Text("Amount")
-                    }
-                    .frame(width: 200, height: 50)
-                    .textFieldStyle(.roundedBorder)
-                    
-                    TextField(text: $notes, prompt: Text("Enter notes on this entry...")) {
-                        Text("Notes")
-                    }
-                    .frame(width: 200, height: 50)
-                    .textFieldStyle(.roundedBorder)
-                    
-                    Button(action: addEntry) {
-                        Label("Insert Entry", systemImage: "character.book.closed")
-                    }
-                }
+                .background(Color(NSColor.underPageBackgroundColor))
             }
         }
-        .navigationTitle("Accounty")
-        .navigationSubtitle("Manage your finances")
     }
-    
-    // Methods.
+
     private func addEntry() {
-        let convertedAmount: Double = Double(amount) ?? 0.0
-        
         withAnimation {
             let newEntry = Entry(
                 timestamp: Date(),
                 type: type,
                 category: category,
                 desc: desc,
-                amount: convertedAmount,
+                amount: amount,
                 notes: notes
             )
             modelContext.insert(newEntry)
+            clearForm()
         }
+    }
+    
+    private func clearForm() {
+        desc = ""
+        amount = 0.0
+        notes = ""
+    }
+
+    private func deleteSelectedEntry() {
+        if let entry = selectedEntry {
+            modelContext.delete(entry)
+            resetSelectedEntry()
+        }
+    }
+
+    private func resetSelectedEntry() {
+        selectedEntry = nil
     }
     
     private func deleteAllEntries() {
-        do {
-            try modelContext.delete(model: Entry.self)
-            resetSelectedEntry()
-        } catch {
-            print("Failed to delete entries.")
-        }
+        try? modelContext.delete(model: Entry.self)
+        resetSelectedEntry()
     }
+}
+
+struct EntryDetailDisplay: View {
+    let entry: Entry
     
-    private func deleteSelectedEntry() {
-        if let unwrappedEntry = selectedEntry {
-            modelContext.delete(unwrappedEntry)
-            resetSelectedEntry()
-        } else {
-            return
+    var body: some View {
+        VStack(alignment: .leading, spacing: 20) {
+            HStack {
+                Text(entry.category)
+                    .font(.title)
+                    .bold()
+                Spacer()
+                Text("\(entry.currency) \(entry.amount, specifier: "%.2f")")
+                    .font(.title)
+                    .foregroundStyle(entry.type == "Income" ? .green : .primary)
+            }
+            
+            Divider()
+            
+            Group {
+                Label(entry.timestamp.formatted(), systemImage: "calendar")
+                Label(entry.type, systemImage: "info.circle")
+            }
+            .foregroundStyle(.secondary)
+            
+            Text("Description")
+                .font(.headline)
+            Text(entry.desc.isEmpty ? "No description provided." : entry.desc)
+            
+            Text("Notes")
+                .font(.headline)
+            Text(entry.notes.isEmpty ? "No notes." : entry.notes)
+                .italic()
+            
+            Spacer()
         }
-    }
-    
-    private func resetSelectedEntry() {
-        selectedEntry = nil
+        .padding()
+        .navigationTitle("Entry Details")
     }
 }
