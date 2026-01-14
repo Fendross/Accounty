@@ -50,7 +50,7 @@ struct MainMenuView: View {
                         username: $username,
                     )
                 case "reports":
-                    Text("Automatic Reports View")
+                    ReportView()
                 case "history":
                     HistoryView()
                 case "settings":

@@ -1,0 +1,164 @@
+import SwiftUI
+import SwiftData
+import Charts
+
+struct ReportView: View {
+    @Query(sort: \Entry.timestamp, order: .reverse) private var allEntries: [Entry]
+    
+    @State private var selectedMonth: String = ""
+
+    var availableMonths: [String] {
+        let months = allEntries.map { $0.month }
+        return Array(Set(months)).sorted(by: >)
+    }
+
+    var monthlyEntries: [Entry] {
+        allEntries.filter { $0.month == selectedMonth }
+    }
+
+    var totalEarned: Double {
+        monthlyEntries.filter { $0.type == "Income" }.reduce(0) { $0 + $1.amount }
+    }
+    
+    var totalSpent: Double {
+        monthlyEntries.filter { $0.type == "Expense" }.reduce(0) { $0 + $1.amount }
+    }
+
+    var body: some View {
+        ScrollView {
+            VStack(spacing: 25) {
+                
+                headerSection
+
+                if availableMonths.isEmpty {
+                    ContentUnavailableView("No Data Available",
+                                           systemImage: "chart.bar.fill",
+                                           description: Text("Start by adding new entries to see your reports."))
+                        .padding(.top, 100)
+                } else {
+                    HStack(spacing: 20) {
+                        SummaryCard(title: "Earned", amount: totalEarned, color: .green)
+                        SummaryCard(title: "Spent", amount: totalSpent, color: .red)
+                        SummaryCard(title: "Balance", amount: totalEarned - totalSpent, color: .blue)
+                    }
+                    .padding(.horizontal)
+                    
+                    HStack(alignment: .top, spacing: 20) {
+                        categoryBarChart
+                        incomeExpenseDonutChart
+                    }
+                    .padding(.horizontal)
+                    .padding(.bottom, 40)
+                }
+            }
+            .padding(.vertical)
+        }
+        .onAppear {
+            if selectedMonth.isEmpty {
+                selectedMonth = availableMonths.first ?? ""
+            }
+        }
+    }
+
+    private var headerSection: some View {
+        HStack {
+            VStack(alignment: .leading) {
+                Text("Financial Reports")
+                    .font(.largeTitle).bold()
+                Text("Analyze your income and spending habits")
+                    .foregroundStyle(.secondary)
+            }
+            Spacer()
+            
+            Picker("Selected Month", selection: $selectedMonth) {
+                ForEach(availableMonths, id: \.self) { month in
+                    Text(month).tag(month)
+                }
+            }
+            .frame(width: 250)
+        }
+        .padding(.horizontal)
+    }
+
+    private var categoryBarChart: some View {
+        VStack(alignment: .leading) {
+            Text("Spending by Category")
+                .font(.headline)
+                .padding(.bottom, 10)
+            
+            Chart(monthlyEntries.filter { $0.type == "Expense" }) { entry in
+                BarMark(
+                    x: .value("Category", entry.category),
+                    y: .value("Amount", entry.amount)
+                )
+                .foregroundStyle(by: .value("Category", entry.category))
+            }
+            .frame(height: 300)
+        }
+        .padding()
+        .background(Color(NSColor.controlBackgroundColor))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5)
+    }
+
+    private var incomeExpenseDonutChart: some View {
+        VStack(alignment: .leading) {
+            Text("Income vs Expenses")
+                .font(.headline)
+                .padding(.bottom, 10)
+            
+            Chart {
+                SectorMark(
+                    angle: .value("Amount", totalEarned),
+                    innerRadius: .ratio(0.6),
+                    angularInset: 2
+                )
+                .foregroundStyle(by: .value("Type", "Income"))
+
+                SectorMark(
+                    angle: .value("Amount", totalSpent),
+                    innerRadius: .ratio(0.6),
+                    angularInset: 2
+                )
+                .foregroundStyle(by: .value("Type", "Spent"))
+            }
+            .chartForegroundStyleScale([
+                "Income": .green,
+                "Spent": .red
+            ])
+            .frame(height: 300)
+        }
+        .padding()
+        .background(Color(NSColor.controlBackgroundColor))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5)
+    }
+}
+
+struct SummaryCard: View {
+    let title: String
+    let amount: Double
+    let color: Color
+    
+    var body: some View {
+        VStack(alignment: .leading, spacing: 8) {
+            Text(title)
+                .font(.subheadline)
+                .fontWeight(.medium)
+                .foregroundStyle(.secondary)
+            
+            Text("EUR \(amount, specifier: "%.2f")")
+                .font(.system(.title2, design: .monospaced))
+                .bold()
+                .foregroundStyle(color)
+        }
+        .frame(maxWidth: .infinity, alignment: .leading)
+        .padding()
+        .background(Color(NSColor.windowBackgroundColor))
+        .cornerRadius(12)
+        .overlay(
+            RoundedRectangle(cornerRadius: 12)
+                .stroke(Color.gray.opacity(0.1), lineWidth: 1)
+        )
+    }
+}
