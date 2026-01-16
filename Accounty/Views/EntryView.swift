@@ -3,7 +3,7 @@ import SwiftData
 
 struct EntryView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Entry.timestamp, order: .reverse) private var entries: [Entry]
+    @Query(sort: \Entry.timestamp, order: .reverse) private var allEntries: [Entry]
     
     @State private var selectedEntry: Entry?
     
@@ -21,7 +21,7 @@ struct EntryView: View {
         NavigationSplitView {
             List(selection: $selectedEntry) {
                 Section("Recent History") {
-                    ForEach(entries) { entry in
+                    ForEach(allEntries) { entry in
                         NavigationLink(value: entry) {
                             VStack(alignment: .leading) {
                                 Text(entry.desc.isEmpty ? "No Description" : entry.desc)
