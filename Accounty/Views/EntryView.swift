@@ -5,7 +5,6 @@ struct EntryView: View {
     @Environment(\.modelContext) private var modelContext
     @Query(sort: \Entry.timestamp, order: .reverse) private var entries: [Entry]
     
-    @Binding var username: String
     @State private var selectedEntry: Entry?
     
     let types = ["Income", "Expense"]

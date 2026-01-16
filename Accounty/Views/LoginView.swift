@@ -1,34 +1,45 @@
 import SwiftUI
-import SwiftData
 
 struct LoginView: View {
-    @State private var username: String = ""
+    @Binding var username: String
+    @State private var inputName: String = ""
 
     var body: some View {
-        NavigationStack {
-            Label {}
-            icon: {
+        VStack(spacing: 30) {
+            VStack {
                 Ellipse()
                     .fill(Color(red: 0.5568, green: 0.5137, blue: 0.3451, opacity: 0.5))
-                    .frame(width: 70, height: 60, alignment: .center)
-                    .overlay(Text("Accounty"))
+                    .frame(width: 80, height: 70)
+                    .overlay(Text("Accounty").bold())
+                
+                Text("Welcome to Accounty")
+                    .font(.title)
+                    .padding(.top, 10)
             }
-            Image("AccountyIcon")
             
-            Divider()
+            Divider().frame(width: 300)
             
-            Form {
-                TextField(text: $username, prompt: Text("Enter username...")) {
-                    Text("Username")
+            VStack(spacing: 15) {
+                TextField("Username", text: $inputName, prompt: Text("Enter username..."))
+                    .textFieldStyle(.roundedBorder)
+                    .frame(width: 250)
+                    .onSubmit { login() }
+                
+                Button(action: login) {
+                    Text("Login")
+                        .frame(width: 230)
                 }
-                .frame(width: 200, height: 50)
-                .textFieldStyle(.roundedBorder)
+                .buttonStyle(.borderedProminent)
+                .controlSize(.large)
+                .disabled(inputName.trimmingCharacters(in: .whitespaces).isEmpty)
             }
-            NavigationLink("Login") {
-                MainMenuView(
-                    username: $username
-                )
-            }
+        }
+        .frame(minWidth: 500, minHeight: 400)
+    }
+
+    private func login() {
+        withAnimation {
+            username = inputName
         }
     }
 }

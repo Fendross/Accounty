@@ -42,13 +42,15 @@ struct MainMenuView: View {
                     }
                 }
                 .padding(.bottom, 40)
+                
+                Button("Logout") {
+                    username = ""
+                }
             }
             .navigationDestination(for: String.self) { value in
                 switch value {
                 case "new_entry":
-                    EntryView(
-                        username: $username,
-                    )
+                    EntryView()
                 case "reports":
                     ReportView()
                 case "history":
