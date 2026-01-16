@@ -5,7 +5,8 @@ import SwiftData
 struct AccountyApp: App {
     var sharedModelContainer: ModelContainer = {
         let schema = Schema([
-            Entry.self
+            Entry.self,
+            Position.self
         ])
         let modelConfiguration = ModelConfiguration(schema: schema, isStoredInMemoryOnly: false)
 

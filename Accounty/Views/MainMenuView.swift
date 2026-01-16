@@ -36,8 +36,8 @@ struct MainMenuView: View {
                             path.append("history")
                         }
                         
-                        DashboardButton(title: "Settings", icon: "gearshape.fill", color: .gray) {
-                            path.append("settings")
+                        DashboardButton(title: "Positions", icon: "book", color: .brown) {
+                            path.append("positions")
                         }
                     }
                 }
@@ -55,8 +55,8 @@ struct MainMenuView: View {
                     ReportView()
                 case "history":
                     HistoryView()
-                case "settings":
-                    Text("Settings View")
+                case "positions":
+                    PositionView()
                 default:
                     Text("Unknown View")
                 }
