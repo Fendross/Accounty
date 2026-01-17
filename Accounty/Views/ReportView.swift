@@ -24,6 +24,12 @@ struct ReportView: View {
         monthlyEntries.filter { $0.type == "Expense" }.reduce(0) { $0 + $1.amount }
     }
 
+    var savingsRate: Double {
+        guard totalEarned > 0 else { return 0.0 }
+        let rate = ((totalEarned - totalSpent) / totalEarned) * 100
+        return max(rate, 0.0)
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 25) {
@@ -32,14 +38,15 @@ struct ReportView: View {
 
                 if availableMonths.isEmpty {
                     ContentUnavailableView("No Data Available",
-                                           systemImage: "chart.bar.fill",
-                                           description: Text("Start by adding new entries to see your reports."))
+                                         systemImage: "chart.bar.fill",
+                                         description: Text("Start by adding new entries to see your reports."))
                         .padding(.top, 100)
                 } else {
                     HStack(spacing: 20) {
-                        SummaryCard(title: "Earned", amount: totalEarned, color: .green)
-                        SummaryCard(title: "Spent", amount: totalSpent, color: .red)
-                        SummaryCard(title: "Balance", amount: totalEarned - totalSpent, color: .blue)
+                        SummaryCard(title: "Earned", amount: totalEarned, color: .green, isPercentage: false)
+                        SummaryCard(title: "Spent", amount: totalSpent, color: .red, isPercentage: false)
+                        SummaryCard(title: "Balance", amount: totalEarned - totalSpent, color: .blue, isPercentage: false)
+                        SummaryCard(title: "Savings Rate", amount: savingsRate, color: .orange, isPercentage: true)
                     }
                     .padding(.horizontal)
                     
@@ -139,6 +146,7 @@ struct SummaryCard: View {
     let title: String
     let amount: Double
     let color: Color
+    let isPercentage: Bool
     
     var body: some View {
         VStack(alignment: .leading, spacing: 8) {
@@ -147,7 +155,7 @@ struct SummaryCard: View {
                 .fontWeight(.medium)
                 .foregroundStyle(.secondary)
             
-            Text("EUR \(amount, specifier: "%.2f")")
+            Text(isPercentage ? "\(amount, specifier: "%.1f")%" : "EUR \(amount, specifier: "%.2f")")
                 .font(.system(.title2, design: .monospaced))
                 .bold()
                 .foregroundStyle(color)
