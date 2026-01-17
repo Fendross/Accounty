@@ -8,7 +8,7 @@ struct EntryView: View {
     @State private var selectedEntry: Entry?
     
     let types = ["Income", "Expense"]
-    let categories = ["Salary", "Taxes", "Entertainment", "Utilities", "Social Life", "Food", "Travel"]
+    let categories = ["Salary", "Taxes", "Entertainment", "Utilities", "Social Life", "Food", "Travel", "Interests", "Miscellaneous", "Car"]
     
     // Form states.
     @State private var type: String = "Expense"
