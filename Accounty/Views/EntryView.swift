@@ -10,7 +10,7 @@ struct EntryView: View {
     let types = ["Income", "Expense"]
     let categories = ["Salary", "Taxes", "Entertainment", "Utilities", "Social Life", "Food", "Travel"]
     
-    // Form States
+    // Form states.
     @State private var type: String = "Expense"
     @State private var category: String = "Entertainment"
     @State private var desc: String = ""

@@ -69,7 +69,7 @@ struct MainMenuView: View {
                 case "import":
                     ImportView()
                 case "settings":
-                    Text("Settings View Placeholder")
+                    SettingsView()
                 default:
                     Text("Unknown View")
                 }

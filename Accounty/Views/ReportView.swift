@@ -4,6 +4,7 @@ import Charts
 
 struct ReportView: View {
     @Query(sort: \Entry.timestamp, order: .reverse) private var allEntries: [Entry]
+    @Query(sort: \Position.month, order: .forward) private var allPositions: [Position]
     
     @State private var selectedMonth: String = ""
 
@@ -30,23 +31,28 @@ struct ReportView: View {
         return max(rate, 0.0)
     }
 
+    var currentNAV: Double {
+        let position = allPositions.first(where: { $0.month == selectedMonth })
+        return (position?.bankAccount ?? 0) + (position?.brokerLiquidity ?? 0) + (position?.pensionFund ?? 0)
+    }
+
     var body: some View {
         ScrollView {
             VStack(spacing: 25) {
-                
                 headerSection
 
-                if availableMonths.isEmpty {
+                if availableMonths.isEmpty && allPositions.isEmpty {
                     ContentUnavailableView("No Data Available",
                                          systemImage: "chart.bar.fill",
-                                         description: Text("Start by adding new entries to see your reports."))
+                                         description: Text("Start by adding entries or positions to see reports."))
                         .padding(.top, 100)
                 } else {
-                    HStack(spacing: 20) {
+                    HStack(spacing: 15) {
                         SummaryCard(title: "Earned", amount: totalEarned, color: .green, isPercentage: false)
                         SummaryCard(title: "Spent", amount: totalSpent, color: .red, isPercentage: false)
                         SummaryCard(title: "Balance", amount: totalEarned - totalSpent, color: .blue, isPercentage: false)
                         SummaryCard(title: "Savings Rate", amount: savingsRate, color: .orange, isPercentage: true)
+                        SummaryCard(title: "Net Asset Value", amount: currentNAV, color: .primary, isPercentage: false)
                     }
                     .padding(.horizontal)
                     
@@ -55,7 +61,10 @@ struct ReportView: View {
                         incomeExpenseDonutChart
                     }
                     .padding(.horizontal)
-                    .padding(.bottom, 40)
+
+                    netWorthLineChart
+                        .padding(.horizontal)
+                        .padding(.bottom, 40)
                 }
             }
             .padding(.vertical)
@@ -134,6 +143,49 @@ struct ReportView: View {
                 "Spent": .red
             ])
             .frame(height: 300)
+        }
+        .padding()
+        .background(Color(NSColor.controlBackgroundColor))
+        .cornerRadius(12)
+        .shadow(color: .black.opacity(0.05), radius: 5)
+    }
+
+    private var netWorthLineChart: some View {
+        VStack(alignment: .leading) {
+            Text("Net Worth Evolution")
+                .font(.headline)
+                .padding(.bottom, 10)
+
+            Chart {
+                ForEach(allPositions) { position in
+                    let totalValue = position.bankAccount + position.brokerLiquidity + position.pensionFund
+                    
+                    AreaMark(
+                        x: .value("Month", position.month),
+                        y: .value("Net Worth", totalValue)
+                    )
+                    .foregroundStyle(LinearGradient(colors: [.blue.opacity(0.3), .blue.opacity(0.0)], startPoint: .top, endPoint: .bottom))
+                    .interpolationMethod(.catmullRom)
+
+                    LineMark(
+                        x: .value("Month", position.month),
+                        y: .value("Net Worth", totalValue)
+                    )
+                    .foregroundStyle(.blue)
+                    .lineStyle(StrokeStyle(lineWidth: 3))
+                    .interpolationMethod(.catmullRom)
+                    
+                    PointMark(
+                        x: .value("Month", position.month),
+                        y: .value("Net Worth", totalValue)
+                    )
+                    .foregroundStyle(.blue)
+                }
+            }
+            .frame(height: 350)
+            .chartYAxis {
+                AxisMarks(position: .leading)
+            }
         }
         .padding()
         .background(Color(NSColor.controlBackgroundColor))
