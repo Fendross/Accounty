@@ -1,6 +1,10 @@
-# Accounty
-
-A macOS native expense tracker to manage and analyze one's assets and expenses.
+<div align="center">
+  <h1>Accounty</h1>
+  <h4>A macOS native expense tracker to manage and analyze one's assets and expenses.</h4>
+  <p>
+    <img src="showcase/accounty_icon.png" alt="Main Menu Image" width="30%">
+  </p>
+</div>
 
 > [!NOTE]
 > The application still needs a lot more work.
