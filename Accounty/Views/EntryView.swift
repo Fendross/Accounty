@@ -160,7 +160,7 @@ struct EntryDetailDisplay: View {
                 Spacer()
                 Text("\(entry.currency) \(entry.amount, specifier: "%.2f")")
                     .font(.title)
-                    .foregroundStyle(entry.type == "Income" ? .green : .primary)
+                    .foregroundStyle(entry.type == "Income" ? .green : .red)
             }
             
             Divider()

@@ -29,15 +29,23 @@ struct MainMenuView: View {
                         DashboardButton(title: "Reports", icon: "chart.bar.xaxis", color: .green) {
                             path.append("reports")
                         }
-                    }
 
-                    HStack(spacing: 24) {
                         DashboardButton(title: "History", icon: "clock.arrow.circlepath", color: .purple) {
                             path.append("history")
                         }
-                        
+                    }
+
+                    HStack(spacing: 24) {
                         DashboardButton(title: "Positions", icon: "book", color: .brown) {
                             path.append("positions")
+                        }
+
+                        DashboardButton(title: "Import Data", icon: "square.and.arrow.down", color: .orange) {
+                            path.append("import")
+                        }
+
+                        DashboardButton(title: "Settings", icon: "gearshape.fill", color: .gray) {
+                            path.append("settings")
                         }
                     }
                 }
@@ -46,6 +54,7 @@ struct MainMenuView: View {
                 Button("Logout") {
                     username = ""
                 }
+                .padding(.bottom, 20)
             }
             .navigationDestination(for: String.self) { value in
                 switch value {
@@ -57,6 +66,10 @@ struct MainMenuView: View {
                     HistoryView()
                 case "positions":
                     PositionView()
+                case "import":
+                    ImportView()
+                case "settings":
+                    Text("Settings View Placeholder")
                 default:
                     Text("Unknown View")
                 }
