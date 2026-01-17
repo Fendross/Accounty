@@ -40,7 +40,7 @@ struct HistoryView: View {
             TableColumn("Amount", value: \.amount) { entry in
                 formatAmount(entry)
             }
-            .width(90)
+            .width(120)
             
             TableColumn("Notes", value: \.notes)
         }
