@@ -23,7 +23,7 @@ struct ImportView: View {
                 Text("Import Data")
                     .font(.title2).bold()
                 
-                Text("Select a CSV file exported from Numbers")
+                Text("Select a CSV file and import it in Accounty")
                     .foregroundStyle(.secondary)
             }
 
@@ -37,11 +37,11 @@ struct ImportView: View {
                 }
             }
             .formStyle(.grouped)
-            .frame(width: 350, height: 120)
+            .frame(width: 350, height: 150)
 
             VStack(spacing: 15) {
                 Button(action: { isImporting = true }) {
-                    Label("Select CSV File", systemImage: "doc.text")
+                    Label("Upload CSV File", systemImage: "doc.text")
                         .frame(width: 180)
                 }
                 .buttonStyle(.borderedProminent)
