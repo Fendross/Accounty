@@ -45,7 +45,7 @@ struct HistoryView: View {
             TableColumn("Notes", value: \.notes)
         }
         .navigationTitle("Transaction History")
-        .searchable(text: $searchText, placement: .toolbar)
+        .searchable(text: $searchText, placement: .toolbar, prompt: "Enter category...")
         .toolbar {
             Button(role: .destructive, action: deleteSelected) {
                 Label("Delete", systemImage: "trash")
