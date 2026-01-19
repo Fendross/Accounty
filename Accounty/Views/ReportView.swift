@@ -207,7 +207,7 @@ struct SummaryCard: View {
                 .fontWeight(.medium)
                 .foregroundStyle(.secondary)
             
-            Text(isPercentage ? "\(amount, specifier: "%.1f")%" : "EUR \(amount, specifier: "%.2f")")
+            Text(isPercentage ? "\(amount, specifier: "%.1f") %" : "EUR \(amount, specifier: "%.2f")")
                 .font(.system(.title2, design: .monospaced))
                 .bold()
                 .foregroundStyle(color)
