@@ -3,12 +3,12 @@ import SwiftData
 
 struct EntryView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Entry.timestamp, order: .reverse) private var allEntries: [Entry]
+    @Query(sort: \Entry.date, order: .reverse) private var allEntries: [Entry]
     
     @State private var selectedEntry: Entry?
     
     let types = ["Income", "Expense"]
-    let categories = ["Salary", "Taxes", "Entertainment", "Utilities", "Social Life", "Food", "Travel", "Interests", "Miscellaneous", "Car"]
+    let categories = ["Salary", "Taxes", "Entertainment", "Utilities", "Social Life", "Food", "Travel", "Interests", "Gift", "Miscellaneous", "Car"]
     
     // Form states.
     @State private var type: String = "Expense"
@@ -113,7 +113,7 @@ struct EntryView: View {
     private func addEntry() {
         withAnimation {
             let newEntry = Entry(
-                timestamp: Date(),
+                date: Date(),
                 type: type,
                 category: category,
                 desc: desc,
@@ -166,7 +166,7 @@ struct EntryDetailDisplay: View {
             Divider()
             
             Group {
-                Label(entry.timestamp.formatted(), systemImage: "calendar")
+                Label(entry.date.formatted(), systemImage: "calendar")
                 Label(entry.type, systemImage: "info.circle")
             }
             .foregroundStyle(.secondary)

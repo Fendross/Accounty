@@ -3,7 +3,7 @@ import SwiftData
 import Charts
 
 struct ReportView: View {
-    @Query(sort: \Entry.timestamp, order: .reverse) private var allEntries: [Entry]
+    @Query(sort: \Entry.date, order: .reverse) private var allEntries: [Entry]
     @Query(sort: \Position.month, order: .forward) private var allPositions: [Position]
     
     @State private var selectedMonth: String = ""

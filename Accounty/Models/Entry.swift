@@ -3,7 +3,7 @@ import SwiftData
 
 @Model
 final class Entry {
-    var timestamp: Date
+    var date: Date
     var type: String
     var category: String
     var desc: String
@@ -11,8 +11,8 @@ final class Entry {
     var amount: Double
     var notes: String
     
-    init(timestamp: Date = .now, type: String = "Expense", category: String = "General", desc: String = "", amount: Double = 0.0, notes: String = "") {
-        self.timestamp = timestamp
+    init(date: Date = .now, type: String = "Expense", category: String = "General", desc: String = "", amount: Double = 0.0, notes: String = "") {
+        self.date = date
         self.type = type
         self.category = category
         self.desc = desc
@@ -20,15 +20,23 @@ final class Entry {
         self.notes = notes
     }
 
+    var dateString: String {
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy-MM-dd"
+        return formatter.string(from: date)
+    }
+
     var month: String {
-        timestamp.formatted(.dateTime.month().year())
+        let formatter = DateFormatter()
+        formatter.dateFormat = "MMM yyyy"
+        return formatter.string(from: date)
     }
 
     func toStringFull() -> String {
-        "\(timestamp.ISO8601Format()) - \(type) - \(category) - \(desc) - \(currency) \(String(format: "%.2f", amount)) - \(notes)"
+        "\(dateString) - \(type) - \(category) - \(desc) - \(currency) \(String(format: "%.2f", amount)) - \(notes)"
     }
     
     func toStringLabel() -> String {
-        "\(timestamp.formatted(date: .abbreviated, time: .omitted)) - \(category) - \(currency)\(String(format: "%.2f", amount))"
+        "\(dateString) - \(category) - \(currency)\(String(format: "%.2f", amount))"
     }
 }

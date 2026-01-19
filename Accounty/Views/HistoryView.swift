@@ -3,10 +3,10 @@ import SwiftData
 
 struct HistoryView: View {
     @Environment(\.modelContext) private var modelContext
-    @Query(sort: \Entry.timestamp, order: .reverse) private var allEntries: [Entry]
+    @Query(sort: \Entry.date, order: .reverse) private var allEntries: [Entry]
     
     @State private var searchText = ""
-    @State private var sortOrder = [KeyPathComparator(\Entry.timestamp, order: .reverse)]
+    @State private var sortOrder = [KeyPathComparator(\Entry.date, order: .reverse)]
     @State private var selectedEntryID: Entry.ID?
 
     var filteredEntries: [Entry] {
@@ -22,10 +22,10 @@ struct HistoryView: View {
 
     var body: some View {
         Table(filteredEntries, selection: $selectedEntryID, sortOrder: $sortOrder) {
-            TableColumn("Date", value: \.timestamp) { entry in
-                Text(entry.month)
+            TableColumn("Date", value: \.date) { entry in
+                Text(entry.dateString)
             }
-            .width(60)
+            .width(80)
 
             TableColumn("Type", value: \.type) { entry in
                 Text(entry.type)

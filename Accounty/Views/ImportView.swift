@@ -90,7 +90,9 @@ struct ImportView: View {
             .filter { !$0.trimmingCharacters(in: .whitespaces).isEmpty }
         
         var importedCount = 0
-        let dateFormatter = ISO8601DateFormatter()
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd"
 
         if importStrategy == .override {
             try? modelContext.delete(model: Entry.self)
@@ -102,13 +104,13 @@ struct ImportView: View {
             let columns = row.components(separatedBy: ",").map { $0.trimmingCharacters(in: .whitespacesAndNewlines) }
             
             if columns.count >= 5 {
-                let timestamp = dateFormatter.date(from: columns[0]) ?? Date()
+                let date = dateFormatter.date(from: columns[0]) ?? Date()
                 
                 let amountString = columns[4].replacingOccurrences(of: " ", with: "")
                 let amount = Double(amountString) ?? 0.0
                 
                 let newEntry = Entry(
-                    timestamp: timestamp,
+                    date: date,
                     type: columns[1],
                     category: columns[2],
                     desc: columns[3],
