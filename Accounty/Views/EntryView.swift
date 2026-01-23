@@ -173,11 +173,12 @@ struct EntryDetailDisplay: View {
             
             Text("Description")
                 .font(.headline)
-            Text(entry.desc.isEmpty ? "No description provided." : entry.desc)
+            Text(entry.desc.isEmpty ? "N/A" : entry.desc)
+                .italic()
             
             Text("Notes")
                 .font(.headline)
-            Text(entry.notes.isEmpty ? "No notes." : entry.notes)
+            Text(entry.notes.isEmpty ? "N/A" : entry.notes)
                 .italic()
             
             Spacer()
