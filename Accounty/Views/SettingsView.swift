@@ -55,6 +55,7 @@ struct SettingsView: View {
                 Section(header: Text("App Information")) {
                     LabeledContent("Version", value: "1.0.0")
                     LabeledContent("Database", value: "SwiftData (Local)")
+                    LabeledContent("Developer", value: "Fendross")
                 }
             }
             .formStyle(.grouped)
