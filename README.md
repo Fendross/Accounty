@@ -41,7 +41,7 @@ timestamp,type,category,desc,amount,notes
 2026-01-01,Expense,Entertainment,New Switch Game,40.99,Super Mario Odyssey
 2026-01-10,Income,Salary,Main Job,1000,
 ```
-> This can be achieved by launching the python helper script with this command:
+> This can be achieved by launching the python helper script with this command and copying the output string into the csv file:
 ```python
 # Windows
 python format_new_entry.py
