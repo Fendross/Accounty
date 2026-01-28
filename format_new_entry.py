@@ -39,13 +39,15 @@ def build_csv_string():
 
 
 def main():
-    print("--- Accounty Entry Helper ---")
+    print("--- Accounty Entry Formatter ---")
+    print("--- An intuitive util to format ready-to-import csv strings ---")
 
     csv_strings = []
     while True:
         # Assuming at least one string needs to be added, I'll build it straight away.
         new_csv_string = build_csv_string()
         if not new_csv_string:
+            print("The string had some errors. Please try again.\n")
             continue
 
         print("\n--- String that has just been created and formatted ---")
@@ -55,7 +57,7 @@ def main():
         # Update the DS.
         csv_strings.append(new_csv_string)
 
-        # Go again if user asks to.
+        # Exit if user asks to do so.
         another_one = get_input("Do you want to format another one? (y/n) ")
         if another_one.lower() == 'n':
             if len(csv_strings) > 1:
